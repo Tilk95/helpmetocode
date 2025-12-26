@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Challenger Local</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Code Challenger Local</h1>
+            <p class="subtitle">Améliorez la qualité de votre code avec un pipeline multi-agents local</p>
+        </header>
+
+        <main>
+            <!-- Section de saisie -->
+            <section id="code-input-section" class="card">
+                <h2>Code source</h2>
+                <div class="input-group">
+                    <label for="code-input">Collez ou tapez votre code :</label>
+                    <textarea 
+                        id="code-input" 
+                        rows="20" 
+                        placeholder="Collez votre code ici..."
+                    ></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="language-select">Langage :</label>
+                    <select id="language-select">
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                    </select>
+                </div>
+                <button id="btn-challenge" class="btn-primary">Lancer le challenge</button>
+            </section>
+
+            <!-- Section de progression -->
+            <section id="progress-section" class="card" style="display:none;">
+                <h2>Progression</h2>
+                <p class="progress-info">Le traitement peut prendre plusieurs minutes selon la taille du code et la charge du système.</p>
+                <div id="progress-container">
+                    <div class="progress-item" id="progress-challenger">
+                        <span class="progress-label">Challenger</span>
+                        <span class="progress-status">En attente...</span>
+                    </div>
+                    <div class="progress-item" id="progress-reviewer">
+                        <span class="progress-label">Reviewer</span>
+                        <span class="progress-status">En attente...</span>
+                    </div>
+                    <div class="progress-item" id="progress-arbiter">
+                        <span class="progress-label">Arbiter</span>
+                        <span class="progress-status">En attente...</span>
+                    </div>
+                </div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <p class="progress-note">Consultez les logs du serveur pour suivre l'avancement détaillé.</p>
+            </section>
+
+            <!-- Section de résultats -->
+            <section id="results-section" class="card" style="display:none;">
+                <h2>Résultats</h2>
+                
+                <!-- Onglets -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="challenger">
+                        Critiques
+                    </button>
+                    <button class="tab-btn" data-tab="reviewer">
+                        Code amélioré
+                    </button>
+                    <button class="tab-btn" data-tab="arbiter">
+                        Verdict
+                    </button>
+                </div>
+
+                <!-- Contenu des onglets -->
+                <div class="tab-content active" id="tab-challenger">
+                    <div class="result-content">
+                        <h3>Critiques du Challenger</h3>
+                        <pre id="challenger-content" class="code-output"></pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-reviewer">
+                    <div class="result-content">
+                        <h3>Code amélioré par le Reviewer</h3>
+                        <pre id="reviewer-content" class="code-output"></pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-arbiter">
+                    <div class="result-content">
+                        <h3>Verdict de l'Arbiter</h3>
+                        <div id="verdict-badge" class="verdict-badge"></div>
+                        <pre id="arbiter-content" class="code-output"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section d'erreur -->
+            <section id="error-section" class="card error-card" style="display:none;">
+                <h2>Erreur</h2>
+                <div id="error-message" class="error-message"></div>
+                <button id="btn-dismiss-error" class="btn-secondary">Fermer</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Code Challenger Local V0 - 100% Local</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/components.js"></script>
+    <script src="/static/js/ui.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
+

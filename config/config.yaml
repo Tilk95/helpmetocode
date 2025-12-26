@@ -1,0 +1,116 @@
+# Configuration Code Challenger Local V0
+
+providers:
+  ollama_local:
+    base_url: "http://127.0.0.1:11434"
+    timeout: 120  # Timeout réduit pour test (en secondes)
+
+# Configuration des rôles
+# VERSION TEST : Tous les rôles utilisent le même modèle léger pour tester
+roles:
+  challenger:
+    model: "deepseek-coder-v2:lite"
+    temperature: 0.7
+    top_p: 0.9
+    num_ctx: 2048  # Réduit pour être plus léger
+    timeout: 120  # Timeout réduit pour test
+    
+  reviewer:
+    model: "deepseek-coder-v2:lite"  # Même modèle léger
+    temperature: 0.5
+    top_p: 0.9
+    num_ctx: 2048  # Réduit pour être plus léger
+    timeout: 120  # Timeout réduit pour test
+    
+  arbiter:
+    model: "deepseek-coder-v2:lite"  # Même modèle léger
+    temperature: 0.3
+    top_p: 0.9
+    num_ctx: 2048  # Réduit pour être plus léger
+    timeout: 120  # Timeout réduit pour test
+
+# Pipeline séquentiel
+pipeline:
+  - challenger
+  - reviewer
+  - arbiter
+
+# Templates de prompts pour chaque rôle
+templates:
+  challenger: |
+    Tu es un Challenger expert en code. Ton rôle est d'analyser ce code de manière critique et agressive.
+    
+    Tu dois identifier :
+    - Les bugs potentiels
+    - Les cas limites non gérés
+    - Les problèmes de performance
+    - Les problèmes de lisibilité et de maintenance
+    - Les violations de bonnes pratiques
+    - Les risques de sécurité
+    
+    Langage: {{LANGUAGE}}
+    Code à analyser:
+    
+    ```{{LANGUAGE}}
+    {{CODE}}
+    ```
+    
+    Fournis une analyse détaillée et structurée de tous les problèmes identifiés.
+    
+  reviewer: |
+    Tu es un Reviewer expert. Ton rôle est d'améliorer le code en te basant sur les critiques du Challenger.
+    
+    Langage: {{LANGUAGE}}
+    Code original:
+    
+    ```{{LANGUAGE}}
+    {{CODE}}
+    ```
+    
+    Critiques du Challenger:
+    {{CRITIQUES}}
+    
+    Fournis :
+    1. Une version améliorée du code
+    2. Une explication détaillée des changements effectués
+    3. Les raisons de chaque amélioration
+    
+    Code amélioré:
+    
+  arbiter: |
+    Tu es un Arbiter expert. Ton rôle est de donner un verdict final sur la qualité du code.
+    
+    Tu dois évaluer :
+    - Le code original
+    - Les critiques du Challenger
+    - Le code amélioré par le Reviewer
+    
+    Langage: {{LANGUAGE}}
+    
+    Code original:
+    ```{{LANGUAGE}}
+    {{CODE}}
+    ```
+    
+    Critiques du Challenger:
+    {{CRITIQUES}}
+    
+    Code amélioré:
+    ```{{LANGUAGE}}
+    {{CODE_AMELIORE}}
+    ```
+    
+    Donne un verdict parmi :
+    - ACCEPTÉ : Le code amélioré est de bonne qualité
+    - ACCEPTÉ AVEC RÉSERVES : Le code amélioré est acceptable mais avec des points d'attention
+    - REFUSÉ : Le code amélioré nécessite encore des améliorations importantes
+    
+    Fournis ton verdict et une justification détaillée.
+
+# Paramètres généraux
+settings:
+  project_name: "Code Challenger Local"
+  default_language: "python"
+  max_retry: 1  # Nombre de tentatives en cas de réponse vide
+  preserve_outputs_on_error: true  # Conserver les sorties déjà produites si un rôle échoue
+
